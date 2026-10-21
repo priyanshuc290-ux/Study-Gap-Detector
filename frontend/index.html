@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Take a short quiz on a syllabus unit, see which topics are strong and which need work, and get an AI study agent to help you close the gaps.">
+  <meta name="color-scheme" content="light">
+  <link rel="preload" href="fonts/plus-jakarta-sans-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <title>Study Gap Detector</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231f5eff'/%3E%3Crect x='4' y='5' width='16' height='3' rx='1' fill='white'/%3E%3Crect x='4' y='10.5' width='7' height='3' rx='1' fill='white'/%3E%3Crect x='12' y='10.5' width='8' height='3' rx='1' fill='%23111827'/%3E%3Crect x='4' y='16' width='12' height='3' rx='1' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
+</head>
+<body data-layout="site">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="header-in">
+      <a class="brand" href="#/" aria-label="Study Gap Detector, home">
+        <svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="9" height="4" rx="1"/><rect class="gapmark" x="13" y="10" width="8" height="4" rx="1"/><rect x="3" y="16" width="14" height="4" rx="1"/></svg>
+        <span>Study Gap <b>Detector</b></span>
+      </a>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="siteNav" aria-label="Open menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav id="siteNav" class="site-nav" aria-label="Main">
+        <a href="#/study-gap" data-link="study-gap">Study Gap Checker</a>
+        <a href="#/chat" data-link="chat">Ask AI Agent</a>
+        <a href="#/dashboard" data-link="dashboard" id="navDashboard" hidden>Dashboard</a>
+        <a href="#/about" data-link="about">About</a>
+        <a href="#/reviews" data-link="reviews">Reviews</a>
+        <a href="#/contact" data-link="contact">Contact</a>
+        <span class="nav-auth" id="navAuth"></span>
+      </nav>
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode" title="Dark mode">
+        <svg class="i-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ================= Home ================= -->
+    <section class="view" id="view-home" hidden>
+      <div class="hero">
+        <div class="wrap hero-in">
+          <div class="hero-copy">
+            <p class="eyebrow">Find the gap, then close it</p>
+            <h1>Find Your Study Gaps &amp; <span class="c-blue">Fix</span> <span class="c-green">Them</span>.</h1>
+            <p class="lead">Take a short quiz on a unit from your syllabus. You see which topics are solid and which are gaps, and an AI study agent helps you plan what to revise next.</p>
+            <div class="cta-row">
+              <a class="btn btn-lg" href="#/signup" id="ctaStart">Get started</a>
+              <a class="btn btn-lg btn-secondary" href="#/study-gap">Check study gap</a>
+              <a class="btn btn-lg btn-ghost" href="#/chat">Ask AI</a>
+            </div>
+            <p class="hero-meta"><span><b>10 to 50</b> questions per quiz</span><span><b>Topic-by-topic</b> results</span><span><b>No account</b> needed for the quiz</span></p>
+          </div>
+          <figure class="gapfig" aria-labelledby="gapfigCap">
+            <div class="win-bar" aria-hidden="true"><span class="win-dot r"></span><span class="win-dot a"></span><span class="win-dot g"></span><span class="win-file">unit-results.txt</span></div>
+            <svg viewBox="0 0 360 230" role="img" aria-label="Illustration: four topic bars. Arrays, Stacks and Sorting are mostly filled. Linked Lists is short, with a dashed orange section marking the gap.">
+              <g class="fig-grid"><path d="M90 20V190M150 20V190M210 20V190M270 20V190M330 20V190"/></g>
+              <g class="fig-label"><text x="0" y="45">Arrays</text><text x="0" y="90">Linked Lists</text><text x="0" y="135">Stacks</text><text x="0" y="180">Sorting</text></g>
+              <rect class="fig-track" x="90" y="30" width="240" height="22" rx="11"/><rect class="fig-ok" x="90" y="30" width="204" height="22" rx="11"/>
+              <rect class="fig-track" x="90" y="75" width="240" height="22" rx="11"/><rect class="fig-weak" x="90" y="75" width="84" height="22" rx="11"/><rect class="fig-gap" x="174" y="75" width="120" height="22" rx="11"/>
+              <rect class="fig-track" x="90" y="120" width="240" height="22" rx="11"/><rect class="fig-ok" x="90" y="120" width="180" height="22" rx="11"/>
+              <rect class="fig-track" x="90" y="165" width="240" height="22" rx="11"/><rect class="fig-ok" x="90" y="165" width="216" height="22" rx="11"/>
+              <text class="fig-note" x="234" y="87" text-anchor="middle">gap</text>
+            </svg>
+            <figcaption id="gapfigCap" class="small">Illustration of a results screen, not real data.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <section class="band-blue" aria-labelledby="whyH">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="eyebrow">Why Study Gap Detector</p>
+            <h2 id="whyH">Built to show you what to revise</h2>
+            <p>Scores and topic results come from your actual answers using fixed rules, not from an AI&rsquo;s guess.</p>
+          </div>
+          <div class="fcards">
+            <article class="fcard">
+              <span class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+              <h3>Study Gap Checker</h3>
+              <p>Pick your year, branch, subject and unit. A diagnostic quiz covers every topic, and fixed rules mark each one strong, weak or &ldquo;needs more questions&rdquo;. No guesswork from an AI.</p>
+            </article>
+            <article class="fcard">
+              <span class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span>
+              <h3>Ask AI Agent</h3>
+              <p>A full chat with a study agent. It can read your saved results, look up the syllabus, suggest curated resources and read a PDF or image you attach.</p>
+            </article>
+            <article class="fcard">
+              <span class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span>
+              <h3>Progress, resources and a plan</h3>
+              <p>Your attempts, accuracy trend, weak topics and past conversations are saved to your account. Each report lists curated learning links and a revision schedule; links not yet checked are labelled as such.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="how" aria-labelledby="howH">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="eyebrow">How it works</p>
+            <h2 id="howH">From a unit to a <span class="c-blue">study plan</span></h2>
+            <p>Four steps. You choose the unit, the app does the sorting.</p>
+          </div>
+          <ol class="step-cards">
+            <li><strong>Choose a unit.</strong><span>Select the subject and unit you want to be checked on.</span></li>
+            <li><strong>Take the diagnostic quiz.</strong><span>Choose 10 to 50 questions. They cover every topic in the unit.</span></li>
+            <li><strong>Read your results.</strong><span>See score, topic-by-topic accuracy, and the topics that need work.</span></li>
+            <li><strong>Close the gaps.</strong><span>Practise weak topics, follow the study plan, or ask the AI agent to explain.</span></li>
+          </ol>
+          <p class="notice" id="homeNotice">Right now the question bank is sample data for Data Structures, units 1 and 2. AI-written reports and chat need an AI key on the server; without one, reports are labelled &ldquo;Demo&rdquo; and chat is unavailable.</p>
+        </div>
+      </section>
+    </section>
+
+    <!-- ================= Dashboard ================= -->
+    <section class="view" id="view-dashboard" hidden>
+      <div class="wrap page">
+        <div class="page-head">
+          <p class="eyebrow">My progress</p>
+          <h1 id="dashGreeting">Dashboard</h1>
+          <p class="sub" id="dashSub">Pick up where you left off.</p>
+        </div>
+        <div class="quick">
+          <a class="quick-card" href="#/study-gap">
+            <h2>Check your study gap</h2>
+            <p>Take a diagnostic quiz on a unit and see your strong and weak topics.</p>
+            <span class="link">Start a quiz</span>
+          </a>
+          <a class="quick-card" href="#/chat">
+            <h2>Ask the AI agent</h2>
+            <p>Get explanations, a revision plan, or help with a PDF or screenshot.</p>
+            <span class="link">Open chat</span>
+          </a>
+        </div>
+        <div class="notice row" id="importBanner" hidden>
+          <span id="importText"></span>
+          <button type="button" class="btn btn-sm" id="importBtn">Import to my account</button>
+        </div>
+        <div class="dash-grid">
+          <section class="panel" aria-labelledby="latestH">
+            <h2 id="latestH">Latest study-gap result</h2>
+            <div id="latestBox"></div>
+          </section>
+          <section class="panel" aria-labelledby="convH">
+            <div class="panel-head"><h2 id="convH">Recent conversations</h2><a class="small" href="#/chat">New chat</a></div>
+            <div id="convBox"></div>
+          </section>
+        </div>
+        <section class="panel" aria-labelledby="recentH">
+          <h2 id="recentH">Recent quizzes</h2>
+          <div id="recentBox" class="table-wrap"></div>
+        </section>
+        <section class="panel" id="progressSection" aria-labelledby="progH">
+          <h2 id="progH">Progress by unit</h2>
+          <div id="progressBox"></div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ================= Study Gap Checker (Mode 1) ================= -->
+    <section class="view" id="view-gap-setup" hidden>
+      <div class="wrap page narrow">
+        <div class="page-head">
+          <p class="eyebrow">Diagnostic quiz</p>
+          <h1>Study Gap <span class="c-blue">Checker</span></h1>
+          <p class="sub">Select what you want to be checked on.</p>
+        </div>
+        <div class="notice" id="guestNotice" hidden>You are not logged in, so results are saved only in this browser. <a href="#/signup">Create an account</a> or <a href="#/login">log in</a> to keep them safely.</div>
+        <form id="gapForm" class="card form grid-form" novalidate>
+          <label>Academic year <select id="year" required></select></label>
+          <label>Semester <select id="semester" required></select></label>
+          <label>Branch <select id="branch" required></select></label>
+          <label>Subject <select id="subject" required></select></label>
+          <label>Unit <select id="unit" required></select></label>
+          <p class="notice full" id="availability" role="status"></p>
+          <div class="actions full">
+            <button type="button" class="btn btn-ghost" data-nav="dashboard">Back</button>
+            <button type="submit" class="btn" id="gapContinue">Continue</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="view" id="view-quiz-setup" hidden>
+      <div class="wrap page narrow">
+        <div class="page-head">
+          <p class="eyebrow">Diagnostic quiz</p>
+          <h1>Quiz <span class="c-blue">setup</span></h1>
+          <p class="sub" id="setupSummary"></p>
+        </div>
+        <div class="card" id="priorAttempts" hidden>
+          <h3>Your earlier attempts for this unit</h3>
+          <p class="muted" id="priorText"></p>
+          <div id="setupHistory" class="table-wrap"></div>
+          <div class="actions wrap-row">
+            <button type="button" class="btn btn-secondary" id="viewLastBtn">View last results</button>
+            <button type="button" class="btn btn-ghost" id="clearHistoryBtn">Clear all saved attempts</button>
+          </div>
+        </div>
+        <form id="quizForm" class="card">
+          <fieldset>
+            <legend>Quiz size</legend>
+            <div class="choices row">
+              <label class="choice"><input type="radio" name="size" value="10" checked><span>10 questions</span></label>
+              <label class="choice"><input type="radio" name="size" value="20"><span>20 questions</span></label>
+              <label class="choice"><input type="radio" name="size" value="30"><span>30 questions</span></label>
+              <label class="choice"><input type="radio" name="size" value="50"><span>50 questions</span></label>
+            </div>
+          </fieldset>
+          <div class="info">
+            <strong>This will be a Diagnostic Quiz.</strong>
+            <p>It covers every topic in the unit so your answers can show where your gaps are. Weak-topic practice, mixed questions and reattempts become available on the results screen after you submit.</p>
+          </div>
+          <p class="notice" id="sizeNote"></p>
+          <div class="actions">
+            <button type="button" class="btn btn-ghost" data-nav="gap-setup">Back</button>
+            <button type="submit" class="btn">Start Diagnostic Quiz</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="view" id="view-quiz" hidden>
+      <div class="wrap page narrow">
+        <div class="quiz-head">
+          <div><strong id="quizCount"></strong> <span class="pill" id="quizType"></span></div>
+          <span id="quizAnswered" class="muted"></span>
+        </div>
+        <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" id="progress">
+          <div id="progressFill"></div>
+        </div>
+        <p class="notice" id="quizNote" hidden></p>
+        <div class="card">
+          <h2 id="quizQuestion" class="question"></h2>
+          <div id="quizOptions" class="choices stack"></div>
+        </div>
+        <div class="actions spread">
+          <button type="button" class="btn btn-secondary" id="prevBtn">Previous</button>
+          <button type="button" class="btn" id="nextBtn">Next</button>
+          <button type="button" class="btn btn-success" id="submitBtn" hidden>Submit quiz</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-results" hidden>
+      <div class="wrap page">
+        <div class="page-head">
+          <p class="eyebrow">Results</p>
+          <h1>Your <span class="c-blue">results</span></h1>
+          <p class="sub" id="resultsContext"></p>
+        </div>
+        <div class="grid-2">
+          <div class="card stat"><span class="muted">Score</span><strong id="resScore"></strong><small id="resMeta" class="muted"></small></div>
+          <div class="card stat"><span class="muted">Accuracy</span><strong id="resAcc"></strong><small id="resDelta"></small></div>
+        </div>
+        <p class="muted" id="topicChanges" hidden></p>
+        <div class="card"><h3>Topic-wise performance</h3><div id="topicBars" class="bars"></div></div>
+        <div class="grid-3">
+          <div class="card"><h3>Strong topics</h3><ul id="strongList" class="topics good"></ul></div>
+          <div class="card"><h3>Topics needing improvement</h3><ul id="weakList" class="topics bad"></ul></div>
+          <div class="card"><h3>Topics needing more questions</h3><ul id="moreList" class="topics"></ul></div>
+        </div>
+        <p class="notice" id="dataMessage" hidden></p>
+
+        <div class="card" id="reportSection">
+          <h3>AI study gap report <span class="pill" id="reportMode"></span></h3>
+          <div id="reportStatus" role="status"></div>
+          <div id="reportBox"></div>
+        </div>
+        <div class="card" id="resourcesSection"><h3>Recommended learning resources</h3><div id="resourcesBox"><p class="muted">Resources appear with the report.</p></div></div>
+        <div class="card" id="planSection"><h3>Prioritized study plan</h3><div id="planBox"><p class="muted">Your plan appears with the report.</p></div></div>
+
+        <div class="card"><h3>Attempt history for this unit</h3><div id="resultsHistory" class="table-wrap"></div></div>
+        <details class="card" id="reviewBox"><summary><strong>Review incorrect answers</strong></summary><div id="reviewList"></div></details>
+        <p class="notice">Scores and topic results are calculated by the app from your actual answers using fixed rules: a topic is weak if under 60% of its answered questions are correct, and it needs at least 2 answered questions to be classified. The questions are sample data.</p>
+        <p class="notice warn" id="storageNote" hidden></p>
+        <div class="actions wrap-row">
+          <button class="btn" id="weakBtn">Attempt weak topics</button>
+          <button class="btn" id="mixedBtn">Attempt mixed questions</button>
+          <button class="btn" id="reattemptBtn">Reattempt quiz</button>
+          <button class="btn" id="moreDiagBtn" hidden>Take more diagnostic questions</button>
+          <button class="btn btn-secondary" id="resourcesBtn">Explore recommended resources</button>
+          <button class="btn btn-ghost" data-nav="dashboard">Return to dashboard</button>
+        </div>
+        <p class="muted small" id="weakHint"></p>
+      </div>
+    </section>
+
+    <!-- ================= Ask AI Agent (full screen) ================= -->
+    <section class="view" id="view-chat" hidden>
+      <div class="chat-shell" id="chatShell">
+        <aside class="chat-side" id="chatSide" aria-label="Conversations">
+          <div class="side-top">
+            <a class="brand" href="#/" aria-label="Study Gap Detector, home">
+              <svg class="logo" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="9" height="4" rx="1"/><rect class="gapmark" x="13" y="10" width="8" height="4" rx="1"/><rect x="3" y="16" width="14" height="4" rx="1"/></svg>
+              <span>Study Gap Detector</span>
+            </a>
+            <button class="icon-btn side-close" id="sideClose" type="button" aria-label="Close conversations">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <button class="btn new-chat" id="newChatBtn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            New chat
+          </button>
+          <div class="side-search"><input type="search" id="convSearch" placeholder="Search chats" aria-label="Search conversations" autocomplete="off"></div>
+          <div class="conv-list" id="convList" role="list" aria-label="Previous conversations"></div>
+          <div class="side-foot">
+            <a href="#/dashboard">Dashboard</a>
+            <a href="#/study-gap">Study Gap Checker</a>
+            <div class="side-user"><span id="sideUser" class="truncate"></span><button class="icon-btn theme-toggle sm" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to dark mode" title="Dark mode"><svg class="i-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button><button class="btn btn-sm btn-ghost" type="button" id="sideLogout">Log out</button></div>
+          </div>
+        </aside>
+        <div class="side-backdrop" id="sideBackdrop" hidden></div>
+
+        <section class="chat-main" aria-label="Chat">
+          <header class="chat-top">
+            <button class="icon-btn side-open" id="sideOpen" type="button" aria-label="Open conversations" aria-controls="chatSide" aria-expanded="false">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+            </button>
+            <h1 id="chatTitle" class="chat-title">New chat</h1>
+            <label class="toggle"><input type="checkbox" id="useResults" checked> <span>Use my quiz results</span></label>
+          </header>
+
+          <div class="chat-scroll" id="chatScroll" tabindex="-1">
+            <div class="chat-col">
+              <div id="chatEmpty" class="welcome">
+                <h2>What would you like to study?</h2>
+                <p>Ask what to revise next and the agent checks your quiz results. It can also explain a concept, read the syllabus, find resources, build a plan, or read a PDF or image you attach.</p>
+                <div class="chips" id="chips" aria-label="Suggested prompts"></div>
+              </div>
+              <div id="chatLoading" class="chat-loading" hidden><span class="skeleton"></span><span class="skeleton short"></span><span class="skeleton"></span></div>
+              <div id="chatLog" class="log" aria-live="polite"></div>
+            </div>
+          </div>
+          <button type="button" class="jump" id="jumpBtn" hidden>Jump to latest</button>
+
+          <div class="composer-wrap">
+            <div class="chat-col">
+              <div id="docChip" class="attach-tray" hidden></div>
+              <div id="attachError" class="attach-error" role="alert" hidden></div>
+              <div id="attachTray" class="attach-tray" hidden></div>
+              <form id="chatForm" class="composer" novalidate>
+                <input id="fileInput" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" hidden>
+                <button type="button" class="icon-btn attach-btn" id="attachBtn" aria-label="Attach a PDF, JPG or PNG file" title="Attach a PDF, JPG or PNG (up to 10 MB)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.6l-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l8.5-8.5a3.7 3.7 0 0 1 5.2 5.2l-8.5 8.5a1.8 1.8 0 0 1-2.6-2.6l7.8-7.8"/></svg>
+                </button>
+                <textarea id="chatInput" rows="1" placeholder="Ask about a topic, a unit or your results" aria-label="Message" maxlength="4000" autocomplete="off"></textarea>
+                <button class="send-btn" type="submit" id="sendBtn" aria-label="Send message">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                </button>
+                <button class="send-btn stop" type="button" id="stopBtn" hidden aria-label="Stop the answer">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                </button>
+              </form>
+              <p class="chat-hint">Enter sends, Shift+Enter adds a line. Answers come from an AI model and can be wrong. Quiz results (if switched on) and attached files are sent to the AI provider, so leave out private details.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ================= About ================= -->
+    <section class="view" id="view-about" hidden>
+      <div class="wrap page prose">
+        <div class="page-head"><p class="eyebrow">About</p>
+          <h1>About Study Gap <span class="c-blue">Detector</span></h1></div>
+        <!-- EDIT ME: this page is plain HTML. Replace or extend the text below with your own story. -->
+        <h2>Why it exists</h2>
+        <p>Most revision starts with &ldquo;I should study everything&rdquo;. That is slow, and it hides the real problem: a few specific topics that were never fully understood. Study Gap Detector helps a student find those topics quickly and spend time on them first.</p>
+        <h2>Who it is for</h2>
+        <p>Engineering students (the question bank and syllabus format are built around B.Tech units) who want a fast, honest check on where they stand in a subject before an exam or before moving on to the next unit.</p>
+        <h2>What it does</h2>
+        <ul>
+          <li>Runs a diagnostic quiz on a chosen unit.</li>
+          <li>Marks every topic strong, weak, or not yet judged, using fixed, visible rules. The AI never decides a score.</li>
+          <li>Writes a study report and suggests curated resources for weak topics.</li>
+          <li>Lets you chat with an AI study agent that can read your saved results, the syllabus and files you attach.</li>
+        </ul>
+        <h2>What to keep in mind</h2>
+        <ul>
+          <li>The question bank is currently sample data (Data Structures, units 1 and 2). It is not an official syllabus.</li>
+          <li>AI text can be wrong. Check it against your textbook and class notes.</li>
+          <li>Learning resource links may not have been checked yet; the app labels each one.</li>
+        </ul>
+        <p><a class="btn btn-secondary" href="#/contact">Send feedback</a></p>
+      </div>
+    </section>
+
+    <!-- ================= Contact ================= -->
+    <section class="view" id="view-contact" hidden>
+      <div class="wrap page narrow">
+        <div class="page-head">
+          <p class="eyebrow">Get in touch</p>
+          <h1><span class="c-blue">Contact</span></h1>
+          <p class="sub">Questions, bugs or ideas. Your message is saved in the app and read by its administrator.</p>
+        </div>
+        <form id="contactForm" class="card form" novalidate>
+          <div class="field"><label for="cName">Name</label><input id="cName" name="name" type="text" maxlength="80" autocomplete="name" required><p class="field-error" id="cName-err" hidden></p></div>
+          <div class="field"><label for="cEmail">Email</label><input id="cEmail" name="email" type="email" maxlength="254" autocomplete="email" required><p class="field-error" id="cEmail-err" hidden></p></div>
+          <div class="field"><label for="cSubject">Subject</label><input id="cSubject" name="subject" type="text" maxlength="120" required><p class="field-error" id="cSubject-err" hidden></p></div>
+          <div class="field"><label for="cMessage">Message</label><textarea id="cMessage" name="message" rows="6" maxlength="4000" required></textarea><p class="field-error" id="cMessage-err" hidden></p></div>
+          <div class="hp" aria-hidden="true"><label>Leave this empty <input id="cWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+          <div class="form-status" id="contactStatus" role="status" hidden></div>
+          <div class="actions"><button type="submit" class="btn" id="contactBtn">Send message</button></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= Reviews ================= -->
+    <section class="view" id="view-reviews" hidden>
+      <div class="wrap page">
+        <div class="page-head">
+          <p class="eyebrow">Reviews</p>
+          <h1>Ratings and <span class="c-blue">reviews</span></h1>
+          <p class="sub" id="reviewSummary">Loading reviews&hellip;</p>
+        </div>
+        <div class="two-col">
+          <div>
+            <h2 class="h3">Reviews</h2>
+            <div id="reviewList2" class="review-list"></div>
+          </div>
+          <aside>
+            <div class="card" id="reviewFormBox">
+              <h2 class="h3">Your review</h2>
+              <div id="reviewGuest" hidden><p>Log in to rate the app and write a review.</p><p><a class="btn" href="#/login">Log in</a> <a class="btn btn-secondary" href="#/signup">Sign up</a></p></div>
+              <form id="reviewForm" novalidate hidden>
+                <fieldset class="stars-set">
+                  <legend>Rating</legend>
+                  <div class="stars" id="starInput" role="radiogroup" aria-label="Rating from 1 to 5 stars"></div>
+                  <p class="field-error" id="rRating-err" hidden></p>
+                </fieldset>
+                <div class="field"><label for="rText">Review <span class="muted">(optional)</span></label><textarea id="rText" rows="5" maxlength="1000"></textarea><p class="field-error" id="rText-err" hidden></p></div>
+                <p class="small muted" id="reviewPolicy">Only your first name and last initial are shown. Reviews appear after an administrator approves them. If you edit your review, it is checked again.</p>
+                <div class="form-status" id="reviewStatus" role="status" hidden></div>
+                <div class="actions"><button type="submit" class="btn" id="reviewBtn">Submit review</button><button type="button" class="btn btn-ghost" id="reviewDelete" hidden>Delete my review</button></div>
+              </form>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Login ================= -->
+    <section class="view" id="view-login" hidden>
+      <div class="wrap page auth-page">
+        <div class="card auth-card">
+          <p class="eyebrow">Welcome back</p>
+          <h1>Log <span class="c-blue">in</span></h1>
+          <p class="sub" id="loginNote">Welcome back.</p>
+          <form id="loginForm" class="form" novalidate>
+            <div class="field"><label for="lEmail">Email</label><input id="lEmail" name="email" type="email" autocomplete="email" required><p class="field-error" id="lEmail-err" hidden></p></div>
+            <div class="field"><label for="lPassword">Password</label>
+              <div class="pw"><input id="lPassword" name="password" type="password" autocomplete="current-password" required><button type="button" class="pw-toggle" data-for="lPassword" aria-label="Show password" aria-pressed="false">Show</button></div>
+              <p class="field-error" id="lPassword-err" hidden></p></div>
+            <div class="form-status error" id="loginStatus" role="alert" hidden></div>
+            <button type="submit" class="btn btn-block" id="loginBtn">Log in</button>
+          </form>
+          <p class="small muted">Forgot your password? Password reset by email is not set up yet. It needs an email service connected to the server, so for now ask the site administrator.</p>
+          <p class="small">New here? <a href="#/signup">Create an account</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Sign up ================= -->
+    <section class="view" id="view-signup" hidden>
+      <div class="wrap page auth-page">
+        <div class="card auth-card">
+          <p class="eyebrow">Join</p>
+          <h1>Create your <span class="c-blue">account</span></h1>
+          <p class="sub">Save your quiz results and chats, and pick them up on any device.</p>
+          <form id="signupForm" class="form" novalidate>
+            <div class="field"><label for="sName">Name</label><input id="sName" name="name" type="text" autocomplete="name" maxlength="80" required><p class="field-error" id="sName-err" hidden></p></div>
+            <div class="field"><label for="sEmail">Email</label><input id="sEmail" name="email" type="email" autocomplete="email" required><p class="field-error" id="sEmail-err" hidden></p></div>
+            <div class="field"><label for="sPassword">Password</label>
+              <div class="pw"><input id="sPassword" name="password" type="password" autocomplete="new-password" aria-describedby="sPassword-hint sPassword-err" required><button type="button" class="pw-toggle" data-for="sPassword" aria-label="Show password" aria-pressed="false">Show</button></div>
+              <p class="field-hint" id="sPassword-hint">At least 8 characters, with a letter and a number.</p>
+              <p class="field-error" id="sPassword-err" hidden></p></div>
+            <div class="field"><label for="sConfirm">Confirm password</label><input id="sConfirm" name="password_confirm" type="password" autocomplete="new-password" required><p class="field-error" id="sConfirm-err" hidden></p></div>
+            <div class="form-status error" id="signupStatus" role="alert" hidden></div>
+            <button type="submit" class="btn btn-block" id="signupBtn">Create account</button>
+          </form>
+          <p class="small">Already have an account? <a href="#/login">Log in</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Admin ================= -->
+    <section class="view" id="view-admin" hidden>
+      <div class="wrap page">
+        <div class="page-head"><p class="eyebrow">Admin</p>
+          <h1><span class="c-blue">Admin</span></h1><p class="sub">Approve reviews and read contact messages.</p></div>
+        <section class="panel"><div class="panel-head"><h2>Reviews</h2>
+          <label class="inline">Show <select id="adminStatus"><option value="pending">Waiting for approval</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="all">All</option></select></label></div>
+          <div id="adminReviews"></div></section>
+        <section class="panel"><h2>Contact messages</h2><div id="adminContact"></div></section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="siteFooter">
+    <div class="wrap footer-in">
+      <div>
+        <strong>Study Gap Detector</strong>
+        <p class="small muted">Find the topics you haven&rsquo;t understood yet. Question bank is sample data for now.</p>
+      </div>
+      <nav aria-label="Footer" class="footer-nav">
+        <a href="#/study-gap">Study Gap Checker</a>
+        <a href="#/chat">Ask AI Agent</a>
+        <a href="#/about">About</a>
+        <a href="#/reviews">Reviews</a>
+        <a href="#/contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <div id="toasts" class="toasts" role="status" aria-live="polite"></div>
+  <div id="modalRoot"></div>
+
+  <script src="report.js"></script>
+  <script src="core.js"></script>
+  <script src="quiz.js"></script>
+  <script src="chat.js"></script>
+  <script src="pages.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

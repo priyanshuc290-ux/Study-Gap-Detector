@@ -1,0 +1,7 @@
+{
+  "name": "study-agent-e2e",
+  "private": true,
+  "description": "Optional browser-flow tests (jsdom + a mock AI provider). Not needed to run the app.",
+  "scripts": { "test": "node run_e2e.js" },
+  "devDependencies": { "jsdom": "^24.1.0" }
+}

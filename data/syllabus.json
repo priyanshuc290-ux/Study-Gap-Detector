@@ -1,0 +1,27 @@
+{
+  "note": "Sample syllabus for the demo question bank. This is NOT an official university syllabus. Topic names must match the topic tags in frontend/app.js.",
+  "subjects": {
+    "Data Structures": {
+      "units": {
+        "1": {
+          "title": "Foundations: complexity, arrays, linked lists, stacks",
+          "topics": {
+            "Complexity": {"outcome": "Compare algorithms using Big-O notation and common growth rates", "why": "Every later data-structure choice is justified by its time cost."},
+            "Arrays": {"outcome": "Explain contiguous storage and the cost of indexing and insertion", "why": "Arrays underlie strings, matrices, heaps and hash tables."},
+            "Linked Lists": {"outcome": "Describe node-based storage and compare list operations with array operations", "why": "Pointer-based structures are the base for stacks, queues, trees and graphs."},
+            "Stacks": {"outcome": "Apply LIFO behaviour and stack operations to problems such as call management", "why": "Stacks power recursion, expression evaluation and undo features."}
+          }
+        },
+        "2": {
+          "title": "Queues, trees, sorting and searching",
+          "topics": {
+            "Queues": {"outcome": "Apply FIFO behaviour, queue operations and the circular queue idea", "why": "Queues drive scheduling, buffering and breadth-first traversal."},
+            "Trees": {"outcome": "Define binary trees and BSTs and describe traversals and basic properties", "why": "Trees model hierarchies and give efficient search structures."},
+            "Sorting": {"outcome": "Compare common sorting algorithms by complexity and stability", "why": "Sorting is a building block of searching and many other algorithms."},
+            "Searching": {"outcome": "Apply linear and binary search and state their requirements and costs", "why": "Choosing the right search method decides how fast data can be found."}
+          }
+        }
+      }
+    }
+  }
+}

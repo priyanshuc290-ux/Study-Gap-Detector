@@ -1,0 +1,2 @@
+# Optional. Only needed so Ask AI Agent can read PDF attachments:
+pypdf
